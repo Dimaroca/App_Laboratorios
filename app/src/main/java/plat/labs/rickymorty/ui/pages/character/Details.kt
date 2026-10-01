@@ -1,4 +1,4 @@
-package plat.labs.rickymorty.ui.pages
+package plat.labs.rickymorty.ui.pages.character
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import plat.labs.rickymorty.ui.CharacterDb
+import plat.labs.rickymorty.ui.components.Detail
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,22 +65,10 @@ fun Details(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            DetailRow(label = "Species:", value = character.species)
-            DetailRow(label = "Status:", value = character.status)
-            DetailRow(label = "Gender:", value = character.gender)
+            Detail(label = "Species:", value = character.species)
+            Detail(label = "Status:", value = character.status)
+            Detail(label = "Gender:", value = character.gender)
         }
     }
 }
 
-@Composable
-fun DetailRow(label: String, value: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(label, style = MaterialTheme.typography.bodyLarge)
-        Text(value, style = MaterialTheme.typography.bodyLarge)
-    }
-}

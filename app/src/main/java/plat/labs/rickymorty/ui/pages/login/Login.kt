@@ -1,8 +1,7 @@
-package plat.labs.rickymorty.ui.pages
+package plat.labs.rickymorty.ui.pages.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.overscroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import plat.labs.rickymorty.R
 
 @Composable
-fun Login(onNavigateToCharacters: () -> Unit){
+fun Login(onNavigateToMain: () -> Unit){
     Box(modifier = Modifier.fillMaxSize()){
         Column(
             modifier = Modifier
@@ -32,7 +31,7 @@ fun Login(onNavigateToCharacters: () -> Unit){
             Spacer(modifier = Modifier.height(48.dp))
 
             Button(
-                onClick = onNavigateToCharacters,
+                onClick = onNavigateToMain,
                 modifier = Modifier.fillMaxWidth(0.6f)
             ) {
                 Text("Empezar")

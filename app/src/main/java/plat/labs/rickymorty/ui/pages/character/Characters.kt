@@ -1,6 +1,5 @@
-package plat.labs.rickymorty.ui.pages
+package plat.labs.rickymorty.ui.pages.character
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

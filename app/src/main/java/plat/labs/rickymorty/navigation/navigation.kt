@@ -6,7 +6,25 @@ import kotlinx.serialization.Serializable
 object Login
 
 @Serializable
-object Characters
+object Main
+
+@Serializable
+object CharactersGraph
+
+@Serializable
+object CharactersList
 
 @Serializable
 data class CharacterDetail(val characterId: Int)
+
+@Serializable
+object LocationsGraph
+
+@Serializable
+object LocationsList
+
+@Serializable
+data class LocationDetail(val locationId: Int)
+
+@Serializable
+object Profile
