@@ -17,11 +17,11 @@ import plat.labs.rickymorty.navigation.LocationsGraph
 import plat.labs.rickymorty.navigation.LocationsList
 import plat.labs.rickymorty.navigation.Profile
 import plat.labs.rickymorty.ui.components.BottomNavBar
-import plat.labs.rickymorty.ui.pages.character.CharactersScreen
+import plat.labs.rickymorty.ui.pages.character.CharacterScreen
 import plat.labs.rickymorty.ui.pages.character.Details
 import plat.labs.rickymorty.ui.pages.location.LocationDetail
 import plat.labs.rickymorty.ui.pages.location.Location
-import plat.labs.rickymorty.ui.pages.profile.Profile
+import plat.labs.rickymorty.ui.pages.profile.Profile as ProfileScreen
 
 @Composable
 fun Home(onLogout: () -> Unit) {
@@ -37,7 +37,7 @@ fun Home(onLogout: () -> Unit) {
         ) {
             navigation<CharactersGraph>(startDestination = CharactersList) {
                 composable<CharactersList> {
-                    CharactersScreen(
+                    CharacterScreen(
                         onCharacterClick = { id ->
                             innerNavController.navigate(CharacterDetail(characterId = id))
                         }
@@ -70,7 +70,7 @@ fun Home(onLogout: () -> Unit) {
             }
 
             composable<Profile> {
-                Profile(onLogout = onLogout)
+                ProfileScreen(onLogout = onLogout)
             }
         }
     }

@@ -5,20 +5,26 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import plat.labs.rickymorty.LocationDb
+import androidx.lifecycle.viewmodel.compose.viewModel
 import plat.labs.rickymorty.ui.components.Detail
+import plat.labs.rickymorty.ui.components.Error
+import plat.labs.rickymorty.ui.components.Cargando
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationDetail(
     locationId: Int,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    viewModel: LocationDetailViewModel = viewModel(
+        factory = LocationDetailViewModel.Factory(locationId)
+    )
 ) {
-    val location = remember { LocationDb().getLocationById(locationId) }
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -36,20 +42,37 @@ fun LocationDetail(
             )
         }
     ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(location.name, style = MaterialTheme.typography.titleLarge)
+        when {
+            uiState.isLoading -> {
+                Cargando(
+                    paddingValues = paddingValues,
+                    onClick = { viewModel.LoadingClick() }
+                )
+            }
+            uiState.hasError || uiState.data == null -> {
+                Error(
+                    paddingValues = paddingValues,
+                    onRetry = { viewModel.Load() }
+                )
+            }
+            else -> {
+                val location = uiState.data!!
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                        .padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(location.name, style = MaterialTheme.typography.titleLarge)
 
-            Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(24.dp))
 
-            Detail(label = "ID:", value = location.id.toString())
-            Detail(label = "Type:", value = location.type)
-            Detail(label = "Dimensions:", value = location.dimension)
+                    Detail(label = "ID:", value = location.id.toString())
+                    Detail(label = "Type:", value = location.type)
+                    Detail(label = "Dimensions:", value = location.dimension)
+                }
+            }
         }
     }
 }

@@ -15,16 +15,22 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import plat.labs.rickymorty.Location
-import plat.labs.rickymorty.LocationDb
+import plat.labs.rickymorty.ui.components.Error
+import plat.labs.rickymorty.ui.components.Cargando
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Location(onLocationClick: (Int) -> Unit) {
-    val locations = remember { LocationDb().getAllLocations() }
+fun Location(
+    onLocationClick: (Int) -> Unit,
+    viewModel: LocationsViewModel = viewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -37,14 +43,30 @@ fun Location(onLocationClick: (Int) -> Unit) {
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            items(locations) { location ->
-                LocationRow(location = location, onClick = { onLocationClick(location.id) })
-                Divider()
+        when {
+            uiState.isLoading -> {
+                Cargando(
+                    paddingValues = paddingValues,
+                    onClick = { viewModel.LoadingClick() }
+                )
+            }
+            uiState.hasError -> {
+                Error(
+                    paddingValues = paddingValues,
+                    onRetry = { viewModel.Load() }
+                )
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    items(uiState.data) { location ->
+                        LocationRow(location = location, onClick = { onLocationClick(location.id) })
+                        Divider()
+                    }
+                }
             }
         }
     }

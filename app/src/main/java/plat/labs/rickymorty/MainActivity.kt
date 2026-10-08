@@ -22,7 +22,7 @@ import plat.labs.rickymorty.navigation.Login
 import plat.labs.rickymorty.navigation.Main
 import plat.labs.rickymorty.navigation.Profile
 import plat.labs.rickymorty.ui.components.BottomNavBar
-import plat.labs.rickymorty.ui.pages.character.CharactersScreen
+import plat.labs.rickymorty.ui.pages.character.CharacterScreen
 import plat.labs.rickymorty.ui.pages.character.Details
 import plat.labs.rickymorty.ui.pages.location.Location
 import plat.labs.rickymorty.ui.pages.location.LocationDetail as LocationDetailScreen

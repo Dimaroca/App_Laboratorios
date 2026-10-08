@@ -6,22 +6,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import plat.labs.rickymorty.ui.Character
-import plat.labs.rickymorty.ui.CharacterDb
+import plat.labs.rickymorty.ui.components.Error
+import plat.labs.rickymorty.ui.components.Cargando
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CharactersScreen(
-    onCharacterClick: (Int) -> Unit
+fun CharacterScreen(
+    onCharacterClick: (Int) -> Unit,
+    viewModel: CharactersViewModel = viewModel()
 ) {
-    val characters = remember { CharacterDb().getAllCharacters() }
+    val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         topBar = {
@@ -34,17 +38,33 @@ fun CharactersScreen(
             )
         }
     ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ) {
-            items(characters) { character ->
-                CharacterRow(
-                    character = character,
-                    onClick = { onCharacterClick(character.id) }
+        when {
+            uiState.isLoading -> {
+                Cargando(
+                    paddingValues = paddingValues,
+                    onClick = { viewModel.LoadingClick() }
                 )
-                Divider()
+            }
+            uiState.hasError -> {
+                Error(
+                    paddingValues = paddingValues,
+                    onRetry = { viewModel.Load() }
+                )
+            }
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    items(uiState.data) { character ->
+                        CharacterRow(
+                            character = character,
+                            onClick = { onCharacterClick(character.id) }
+                        )
+                        Divider()
+                    }
+                }
             }
         }
     }
