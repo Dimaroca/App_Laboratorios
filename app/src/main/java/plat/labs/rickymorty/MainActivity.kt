@@ -3,33 +3,17 @@ package plat.labs.rickymorty
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
-import plat.labs.rickymorty.navigation.CharacterDetail
-import plat.labs.rickymorty.navigation.CharactersGraph
-import plat.labs.rickymorty.navigation.CharactersList
-import plat.labs.rickymorty.navigation.LocationDetail
-import plat.labs.rickymorty.navigation.LocationsGraph
-import plat.labs.rickymorty.navigation.LocationsList
 import plat.labs.rickymorty.navigation.Login
 import plat.labs.rickymorty.navigation.Main
-import plat.labs.rickymorty.navigation.Profile
-import plat.labs.rickymorty.ui.components.BottomNavBar
-import plat.labs.rickymorty.ui.pages.character.CharacterScreen
-import plat.labs.rickymorty.ui.pages.character.Details
-import plat.labs.rickymorty.ui.pages.location.Location
-import plat.labs.rickymorty.ui.pages.location.LocationDetail as LocationDetailScreen
-import plat.labs.rickymorty.ui.pages.login.Login
-import plat.labs.rickymorty.ui.pages.profile.Profile as ProfileScreen
-import plat.labs.rickymorty.ui.theme.RickYMortyTheme
+import plat.labs.rickymorty.navigation.Splash
 import plat.labs.rickymorty.ui.pages.home.Home
+import plat.labs.rickymorty.ui.pages.login.Login as LoginScreen
+import plat.labs.rickymorty.ui.pages.splash.Splash as SplashScreen
+import plat.labs.rickymorty.ui.theme.RickYMortyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,13 +32,28 @@ fun RickAndMortyApp() {
 
     NavHost(
         navController = outerNavController,
-        startDestination = Login
+        startDestination = Splash
     ) {
-        composable<Login> {
-            Login(
+        composable<Splash> {
+            SplashScreen(
+                onNavigateToLogin = {
+                    outerNavController.navigate(Login) {
+                        popUpTo(outerNavController.graph.id) { inclusive = true }
+                    }
+                },
                 onNavigateToMain = {
                     outerNavController.navigate(Main) {
-                        popUpTo(Login) { inclusive = true }
+                        popUpTo(outerNavController.graph.id) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable<Login> {
+            LoginScreen(
+                onNavigateToMain = {
+                    outerNavController.navigate(Main) {
+                        popUpTo(outerNavController.graph.id) { inclusive = true }
                     }
                 }
             )
@@ -64,9 +63,7 @@ fun RickAndMortyApp() {
             Home(
                 onLogout = {
                     outerNavController.navigate(Login) {
-                        popUpTo(outerNavController.graph.startDestinationId) {
-                            inclusive = true
-                        }
+                        popUpTo(outerNavController.graph.id) { inclusive = true }
                     }
                 }
             )

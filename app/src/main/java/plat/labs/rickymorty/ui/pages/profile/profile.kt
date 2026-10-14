@@ -3,18 +3,24 @@ package plat.labs.rickymorty.ui.pages.profile
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
+import plat.labs.rickymorty.data.Preferences
 import plat.labs.rickymorty.ui.components.Detail
 
 @Composable
 fun Profile(onLogout: () -> Unit) {
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val preferences = remember { Preferences(context) }
+    val name by preferences.user.collectAsState(initial = null)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,12 +37,18 @@ fun Profile(onLogout: () -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        Detail(label = "Nombre:", value = "Diego Mateo Rodriguez Carrillo")
-        Detail(label = "Carné:", value = "25215")
+        Detail(label = "Nombre:", value = name ?: "")
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Button(onClick = onLogout) {
+        Button(
+            onClick = {
+                scope.launch {
+                    preferences.clear()
+                    onLogout()
+                }
+            }
+        ) {
             Text("Cerrar sesión")
         }
     }

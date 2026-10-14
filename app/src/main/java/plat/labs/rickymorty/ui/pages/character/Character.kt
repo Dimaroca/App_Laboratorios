@@ -18,6 +18,9 @@ import coil.compose.AsyncImage
 import plat.labs.rickymorty.ui.Character
 import plat.labs.rickymorty.ui.components.Error
 import plat.labs.rickymorty.ui.components.Cargando
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.BackHandler
+import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,6 +29,11 @@ fun CharacterScreen(
     viewModel: CharactersViewModel = viewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    val context = LocalContext.current
+    BackHandler {
+        (context as? ComponentActivity)?.finish()
+    }
 
     Scaffold(
         topBar = {

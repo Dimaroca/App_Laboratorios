@@ -27,4 +27,7 @@ object LocationsList
 data class LocationDetail(val locationId: Int)
 
 @Serializable
+object Splash
+
+@Serializable
 object Profile
